@@ -1,0 +1,16 @@
+# Publication repository: ignore everything except the reviewed website
+# and explicitly named release controls. Original sources remain local.
+/*
+!/.gitignore
+!/.gitattributes
+!/PAGES-README.md
+!/.github/
+/.github/*
+!/.github/pwa-release.json
+!/.github/scripts/
+/.github/scripts/*
+!/.github/scripts/verify_site.py
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/pages.yml
+!/pwa-site/

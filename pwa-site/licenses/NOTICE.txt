@@ -1,0 +1,5 @@
+語音：Kokoro-82M-v1.0，bm_george 英式男聲；ONNX community q8；生成速度0.95。不是 Google 聲音或原錄音。
+模型：https://huggingface.co/hexgrad/Kokoro-82M （Apache-2.0）
+匯出：https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX
+生成引擎：https://github.com/thewh1teagle/kokoro-onnx （MIT）
+此網站包只附預生成MP3，不含模型或生成環境。

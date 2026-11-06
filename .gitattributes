@@ -1,0 +1,8 @@
+* text=auto
+# Cache integrity hashes bind the delivered bytes, including line endings.
+# Git must not normalize any generated website file on add or checkout.
+pwa-site/** -text
+.github/** text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+PAGES-README.md text eol=lf
