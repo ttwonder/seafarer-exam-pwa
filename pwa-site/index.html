@@ -96,6 +96,14 @@
  .oral-stage .oral-card{padding:12px}
  .oral-sidebar button{min-height:36px}
 }
+
+/* Scoped transfer dialog only; preserve the original practice workspace. */
+.marks-transfer p{margin:8px 0 12px}
+.marks-transfer textarea{display:block;width:100%;min-width:0;padding:8px;border:1px solid var(--line,#ccd7d3);border-radius:6px;font:inherit;font-size:14px;line-height:1.4;resize:vertical;overflow-wrap:anywhere}
+.marks-transfer .field{margin:10px 0}
+.marks-transfer .actions{margin:8px 0}
+.marks-transfer hr{border:0;border-top:1px solid var(--line,#ccd7d3);margin:16px 0}
+.marks-transfer [role="alert"]{color:#982e21}
 </style>
 <meta name="theme-color" content="#176b60">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -520,7 +528,7 @@
     function listView(){
       const s=browseState();
       const sourceOptions=opt('','全部章節／題卷',s.sourceId)+bank.sources.map(x=>opt(x.id,`${x.title}（${x.actualCount}題）`,s.sourceId)).join('');
-      return `<section class="oral-area oral-browse" aria-label="口語題庫瀏覽"><div class="page-head"><div><div class="eyebrow">QUESTION BANK / EXPORT</div><h1>口語與聽力</h1><p class="subtitle">${bank.questions.length} 題 · 題幹與答案全文列表；瀏覽篩選與勾選不改動練習位置或作答紀錄。</p></div><span class="badge green">已標重點 ${s.favorites.length} 題</span></div>${views()}
+      return `<section class="oral-area oral-browse" aria-label="口語題庫瀏覽"><div class="page-head"><div><div class="eyebrow">QUESTION BANK / EXPORT</div><h1>口語與聽力</h1><p class="subtitle">${bank.questions.length} 題 · 題幹與答案全文列表；瀏覽篩選與勾選不改動練習位置或作答紀錄。</p></div><div class="actions"><span class="badge green">已標重點 ${s.favorites.length} 題</span><button data-act="marks-transfer" class="small">重點碼互傳</button></div></div>${views()}
       ${bank.testOnly?'<div class="warning-box">合成測試資料 · 非正式題庫 · 不可用作考試學習</div>':''}
       <section class="panel oral-filters" aria-label="題庫列表篩選"><div class="oral-list-filter-grid"><label class="field oral-source">章節／題卷<select id="oral-source">${sourceOptions}</select></label><label class="field">題型<select id="oral-kind">${opt('','全部題型',s.kind)+opt('qa','問答',s.kind)+opt('oral','口述',s.kind)}</select></label></div><div class="oral-filter-actions"><label class="oral-check"><input type="checkbox" id="oral-only-favorites" ${s.onlyFavorites?'checked':''}>只看重點</label><label class="oral-check"><input type="checkbox" id="oral-chinese" ${s.showChinese?'checked':''}>中文輔助</label><label class="sr-only" for="oral-search">搜尋口語題目</label><input id="oral-search" type="search" maxlength="1000" placeholder="搜尋中英題幹、答案或原題號" value="${e(s.search)}">${b('search','搜尋')}${b('clear-search','清除搜尋')}</div><small>篩選範圍 ${s.queue.length} 題 · 條件互相交集；列表依來源題序顯示，與練習的隨機題序無關。</small></section>${list.view()}</section>`;
     }
@@ -534,7 +542,7 @@
         const absent=part==='answer'&&!q.answerEn.trim();
         return `<section class="oral-text-panel"><div class="panel-head"><h2>${part==='prompt'?'題幹':'參考答案'}</h2><div class="actions">${b('toggle-'+part,`${visible?'隱藏':'顯示'}${part==='prompt'?'題幹':'答案'}`,`aria-controls="oral-${part}" aria-expanded="${visible}"`)}${b('play-'+part,`播放${part==='prompt'?'題幹':'答案'}`,`title="${absent?'原稿未提供參考答案，不能播放':'英文合成語音；文字隱藏時仍可播放'}" ${!playable(part)||absent?'disabled':''}`)}</div></div><div id="oral-${part}" ${visible?'':'hidden'}>${absent?'<div class="source-note">原稿未提供參考答案，未自行補寫。請查看來源與註記。</div>':`<div class="oral-text" lang="en">${e(q[part+'En'])}</div>${s.showChinese?`<div class="oral-zh" lang="zh-Hant">${e(q[part+'Zh']||'未提供中文輔助')}</div>`:''}`}</div>${!visible?`<div class="oral-hidden">${absent?'原稿缺答案，無答案語音':'文字已隱藏，仍可播放英文語音'}</div>`:''}</section>`;
       };
-      return `<section class="oral-area oral-practice" aria-label="口語練習"><div class="oral-practice-head"><div class="page-head"><div><div class="eyebrow">SPEAKING / LISTENING</div><h1>口語與聽力</h1><p class="subtitle">${bank.questions.length} 題 · 英文問答與口述練習，不計分、不錄音；原單選作答保留並暫停計時。</p></div><span class="badge green">已標重點 ${s.favorites.length} 題</span></div>${views()}</div>${bank.testOnly?'<div class="warning-box">合成測試資料 · 非正式題庫 · 不可用作考試學習</div>':''}<div class="oral-workspace"><aside class="oral-sidebar" aria-label="練習設定">
+      return `<section class="oral-area oral-practice" aria-label="口語練習"><div class="oral-practice-head"><div class="page-head"><div><div class="eyebrow">SPEAKING / LISTENING</div><h1>口語與聽力</h1><p class="subtitle">${bank.questions.length} 題 · 英文問答與口述練習，不計分、不錄音；原單選作答保留並暫停計時。</p></div><div class="actions"><span class="badge green">已標重點 ${s.favorites.length} 題</span><button data-act="marks-transfer" class="small">重點碼互傳</button></div></div>${views()}</div>${bank.testOnly?'<div class="warning-box">合成測試資料 · 非正式題庫 · 不可用作考試學習</div>':''}<div class="oral-workspace"><aside class="oral-sidebar" aria-label="練習設定">
       <section class="panel oral-filters" aria-label="口語練習範圍"><div class="oral-filter-grid"><label class="field oral-source">章節／題卷<select id="oral-source">${sourceOptions}</select></label><label class="field">題型<select id="oral-kind">${opt('','全部題型',s.kind)+opt('qa','問答',s.kind)+opt('oral','口述',s.kind)}</select></label><label class="field">題序<select id="oral-order">${opt('sequential','順序',s.order)+opt('random','隨機',s.order)}</select></label><label class="field">練習方式<select id="oral-mode">${opt('oral','口語（看題作答）',s.mode)+opt('listening','聽力（先隱藏題幹）',s.mode)}</select></label></div><div class="oral-filter-actions"><label class="oral-check"><input type="checkbox" id="oral-only-favorites" ${s.onlyFavorites?'checked':''}>只練重點</label><label class="oral-check"><input type="checkbox" id="oral-chinese" ${s.showChinese?'checked':''}>中文輔助</label><label class="sr-only" for="oral-search">搜尋口語題目</label><input id="oral-search" type="search" maxlength="1000" placeholder="搜尋中英題幹、答案或原題號" value="${e(s.search)}">${b('search','搜尋')}${b('clear-search','清除搜尋')}${b('restart',s.order==='random'?'重新打亂':'從頭練習')}</div><small>目前範圍 ${s.queue.length} 題 · 篩選互相交集；清除搜尋不會改動章節、題型或只練重點。</small></section>
       <section class="panel oral-audio" aria-label="英文語音設定"><div class="oral-audio-controls"><label class="field">英文語音<select id="oral-voice">${voiceOptions()}</select></label><label class="field">語速（0.5～1.5倍）<input id="oral-rate" type="number" min="0.5" max="1.5" step="0.05" value="${s.rate}"></label>${b('refresh-voices','重新偵測語音')}${b('stop','停止播放')}</div><label class="oral-check oral-autoplay"><input type="checkbox" id="oral-autoplay" ${s.autoPlay!==false?'checked':''}>換題自動播放題幹</label><p class="subtext" id="oral-voice-note">${e(voiceNote())}</p><div id="oral-speech-status" role="status" aria-live="polite">${e(speechMessage)}</div><small>預設使用隨附 Kokoro 離線音檔，非原錄音。換題可自動讀題幹，答案手動播放；離開或切到背景即停止。Google 等網路聲音需連線；音檔失敗不自行換聲音。</small></section>
       </aside><div class="oral-stage" role="region" aria-label="題目與答案">${q?`<article class="panel oral-card" data-oral-id="${e(q.id)}"><div class="q-meta"><span class="badge">第 ${s.index+1} / ${s.queue.length} 題</span><span>${e(sources.get(q.sourceId).title)}</span><span>原題 ${q.sourceNumber} · ${q.kind==='qa'?'問答':'口述'} · PDF第 ${q.sourcePages.join('、')} 頁</span>${!q.answerEn.trim()?'<span class="badge gold">原稿缺答案</span>':''}${q.notes.length?'<span class="badge gold">有原稿註記</span>':''}</div><div class="oral-content">${body('prompt',promptVisible)}${body('answer',answerVisible)}</div><div class="question-footer"><div class="actions">${b('prev','上一題',s.index===0?'disabled':'')}${b('mark',s.favorites.includes(q.id)?'取消重點':'標記重點',`aria-pressed="${s.favorites.includes(q.id)}"`)}${b('source','來源與註記')}</div>${b('next','下一題',`${s.index>=s.queue.length-1?'disabled':''} class="primary"`)}</div></article>`:`<div class="empty" id="oral-empty"><strong>${s.onlyFavorites?'目前範圍沒有符合的重點題':'目前範圍沒有符合的題目'}</strong>請調整篩選；不會自動改練全部題目。${s.onlyFavorites?'可取消「只練重點」後標記想練的題目。':''}</div>`}</div></div></section>`;
@@ -585,6 +593,81 @@
   window.OralUI={create};
 })();
 </script>
+<script>/* Offline marks-only transfer. Encoding/checksum are NOT encryption/authentication. */
+(function(root){
+  'use strict';
+  const utf8=new TextEncoder(),text=new TextDecoder('utf-8',{fatal:true});
+  const fail=message=>{throw new Error(message);};
+  function crc(bytes){
+    let n=0xffffffff;
+    for(const b of bytes){n^=b;for(let k=0;k<8;k++)n=(n>>>1)^((n&1)?0xedb88320:0);}
+    return ((n^0xffffffff)>>>0).toString(16).padStart(8,'0');
+  }
+  const to64=bytes=>btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  function from64(value){
+    if(typeof value!=='string'||!value||!/^[A-Za-z0-9_-]+$/.test(value))fail('重點碼格式不正確，請複製完整重點碼');
+    const bytes=Uint8Array.from(atob(value.replace(/-/g,'+').replace(/_/g,'/')),x=>x.charCodeAt(0));
+    if(to64(bytes)!==value)fail('重點碼編碼不完整');
+    return bytes;
+  }
+  function create(choiceBank,oralBank,oralCore){
+    const tables=[choiceBank,oralBank].map(bank=>{
+      const ids=bank.questions.map(q=>q.id).sort();
+      if(!ids.length||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string')||typeof bank.version!=='string')fail('題庫識別無效');
+      return {ids,positions:new Map(ids.map((id,i)=>[id,i])),spec:[bank.version,ids.length,crc(utf8.encode(JSON.stringify(ids)))]};
+    });
+    function pack(ids,table){
+      if(!Array.isArray(ids)||new Set(ids).size!==ids.length||ids.some(id=>!table.positions.has(id)))fail('重點包含不屬於目前題庫的題號');
+      const bytes=new Uint8Array(Math.ceil(table.ids.length/8));
+      for(const id of ids){const i=table.positions.get(id);bytes[i>>>3]|=1<<(i%8);}
+      return to64(bytes);
+    }
+    function unpack(value,table){
+      const bytes=from64(value),n=table.ids.length;
+      if(bytes.length!==Math.ceil(n/8)||(n%8&&bytes.at(-1)>>>(n%8)))fail('重點碼題數或內容不完整');
+      return table.ids.filter((id,i)=>(bytes[i>>>3]&(1<<(i%8)))!==0);
+    }
+    function encode(state){
+      const payload={v:1,b:tables.map(t=>t.spec),m:[pack(state.bookmarks,tables[0]),pack(state.oral.favorites,tables[1])]};
+      const bytes=utf8.encode(JSON.stringify(payload));
+      return 'SQM1.'+to64(bytes)+'.'+crc(bytes);
+    }
+    function decode(input){
+      if(typeof input!=='string'||input.length>4096)fail('請貼上完整重點碼（不是JSON備份）');
+      const code=input.replace(/\s/g,'');
+      if(!code)fail('請先貼上重點碼；空白不是清空重點的指令');
+      const match=/^SQM1\.([A-Za-z0-9_-]+)\.([a-f0-9]{8})$/.exec(code);
+      if(!match)fail('重點碼格式或版本不支援，請從「重點碼互傳」重新複製');
+      let payload;
+      try{
+        const bytes=from64(match[1]);
+        if(crc(bytes)!==match[2])fail('重點碼校驗失敗，可能少字或內容被改動，請重新複製');
+        payload=JSON.parse(text.decode(bytes));
+      }catch(err){fail(err.message.startsWith('重點碼')?err.message:'重點碼內容無法讀取，請重新複製');}
+      if(!payload||Array.isArray(payload)||Object.keys(payload).sort().join(',')!=='b,m,v'||payload.v!==1||!Array.isArray(payload.m)||payload.m.length!==2)fail('重點碼內容格式不支援');
+      if(JSON.stringify(payload.b)!==JSON.stringify(tables.map(t=>t.spec)))fail('兩台設備的題庫版本不一致，請更新為相同版本後重新產生重點碼');
+      return {choice:unpack(payload.m[0],tables[0]),oral:unpack(payload.m[1],tables[1])};
+    }
+    function replace(state,code){
+      const marks=decode(code),next=JSON.parse(JSON.stringify(state));
+      next.bookmarks=marks.choice;
+      if(next.active)next.active.flags=next.active.ids.filter(id=>marks.choice.includes(id));
+      const s=next.oral,current=s.queue[s.index];s.favorites=marks.oral;
+      if(s.onlyFavorites){
+        const eligible=oralCore.pool(oralBank,s),allowed=new Set(eligible);
+        // Preserve an existing random order and current question wherever still eligible.
+        s.queue=s.order==='random'?[...s.queue.filter(id=>allowed.has(id)),...eligible.filter(id=>!s.queue.includes(id))]:eligible;
+        const kept=s.queue.indexOf(current);s.index=kept>=0?kept:Math.max(0,Math.min(s.index,s.queue.length-1));
+      }
+      oralCore.validateState(s,oralBank);
+      return next;
+    }
+    return {encode,decode,replace};
+  }
+  const api={create};
+  if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MarkCode=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
 <script>(() => {
   'use strict';
   const C = window.ExamCore;
@@ -598,6 +681,8 @@
   const UNCERTAIN = QS.filter(q => q.answerUncertain);
   const INCOMPLETE = QS.filter(q => q.questionIncomplete);
   const KEY = 'seafarer.quiz.offline.v1';
+  const MARKS = window.MarkCode.create(BANK, ORAL_BANK, O);
+  const MARKS_BACKUP_KEY = 'seafarer.quiz.marks-backup.v1';
   const labels = {sequential: '順序刷題', random: '隨機練習', exam: '模擬抽考', wrong: '錯題鞏固'};
   const $ = sel => document.querySelector(sel);
   // Every data-derived HTML string passes through e(); source image URLs are build-time data:image/jpeg only.
@@ -619,6 +704,7 @@
   }
   let route = state.active ? 'session' : 'home', resultId = null, resultFilter = 'all', bankSearch = '', bankSection = '', bankPage = 1;
   let lastClock = Date.now(), tickCount = 0, noticeTimer = 0, pendingAction = null, pendingImport = null;
+  let marksDraft = '';
   const oralUI = window.OralUI.create({bank: ORAL_BANK, getState:()=>state, save:persist, render, modal, escape:e, download, notify:toast});
   function alertStorage(message) {
     storageMessage = message;
@@ -807,7 +893,7 @@
   }
   function settings() {
     const notes=QS.filter(q=>q.note);
-    return `<div class="page-head"><div><div class="eyebrow">BACKUP / ABOUT</div><h1>備份與使用說明</h1><p class="subtitle">先下載完整離線資料，即可斷網使用。答題與紀錄只保存在此裝置，不會上傳。</p></div></div><div class="help-content"><section class="panel"><h2 style="margin-top:0">保護你的練習紀錄</h2><p>備份包含未完成作答、歷次成績、錯題／待查與口語重點、篩選及練習位置。未含口語紀錄的舊備份匯入時，保留目前有效的口語紀錄。換電腦或移動檔案前，先匯出JSON備份。</p><div class="actions">${button('export','匯出完整備份','primary')}${button('import','匯入備份')}${button('export-csv','匯出成績CSV','',state.history.length?'':'disabled')}${button('export-raw','匯出瀏覽器原始紀錄','small')}</div><div class="warning-box">請固定使用同一瀏覽器、同一檔案位置。清除網站資料、無痕模式、更換瀏覽器或移動/更名HTML，可能讓原紀錄無法讀取。這不是雲端同步工具。</div></section><h2>三種練習方式</h2><ul><li><strong>順序刷題：</strong>依原稿順序，可選章節及起始題。選答案後按「確認答案」，保留首次結果。</li><li><strong>隨機練習：</strong>從所選章節不重複抽題，確認後立即顯示對錯；範圍不足指定題數時，採該範圍全部題目。</li><li><strong>模擬抽考：</strong>全題庫隨機抽100題，每題1分，60分（含）及格；交卷後才顯示答案。無預設時限。</li><li><strong>錯題鞏固：</strong>收錄最近一次答錯、未答以及所有標記待查的題目，重複只計一次。錯題重新答對後移出；待查即使答對仍保留，須按「取消待查標記」才解除。待查跨次保存並包含在JSON備份；取消待查不會抹除錯題。既有成績不變。舊版未完成作答的待查會沿用；舊版已交卷且未保存的待查標記無法補回。</li></ul><h2>進度與評分</h2><ul><li>每次選答、確認及跳題立即本機保存；重新開啟可續答同一份試卷，不會重新抽題。</li><li>「保存並暫停」停止本次計時；回到作答頁後恢復。關閉/背景期間不計時，無倒數限制。</li><li>交卷前會提醒未答題；未答以0分計算。練習分數為答對題數÷本次總題數×100。</li><li>「A+B+C」或條款組合仍是單選題，因此不打亂選項位置。</li><li>已相容原113題版本的成績、錯題進度與未完成試卷，不改既有答案或分數；原試卷不會中途插入新題。未知版本或改過答案的備份仍拒絕。</li><li>匯入前會檢查題庫版本和成績。匯入會取代本機紀錄，確認前會先下載目前備份。更換HTML路徑時，先在舊版匯出，再在新版匯入。</li></ul><h2>題庫來源與限制</h2><p>來源：用戶提供的18張照片（9頁、113題）及《${e(BANK.wordDocument.filename)}》（實際104題）。重複75題合併並保留雙來源，新增29題，合計${QS.length}題；所有正解以原稿題前A–D字母為準。未使用外部題庫，也未自行變更可能過時的法規題。</p><p>題目保留原文簡體中文，介面使用繁體中文。跨頁文字已接續；題目中的原始重複選項、缺句等問題，以註記保留，不用推測補題。</p><p>題庫版本：<code>${e(BANK.version)}</code>。自我練習用途，並非官方考試或最新法規依據。</p><details style="margin-top:16px"><summary>查看原稿疑點與轉錄註記（${notes.length}題）</summary><ul>${notes.map(q=>`<li><strong>${e(sourceLabel(q))}・${e(q.section)}</strong><br>${e(q.note)} ${button('source','查看原稿','small',`data-id="${q.id}"`)}</li>`).join('')}</ul></details></div>`;
+    return `<div class="page-head"><div><div class="eyebrow">BACKUP / ABOUT</div><h1>備份與使用說明</h1><p class="subtitle">先下載完整離線資料，即可斷網使用。答題與紀錄只保存在此裝置，不會上傳。</p></div></div><div class="help-content"><section class="panel"><h2 style="margin-top:0">保護你的練習紀錄</h2><p>備份包含未完成作答、歷次成績、錯題／待查與口語重點、篩選及練習位置。未含口語紀錄的舊備份匯入時，保留目前有效的口語紀錄。換電腦或移動檔案前，先匯出JSON備份。</p><div class="actions">${button('export','匯出完整備份','primary')}${button('import','匯入備份')}${button('marks-transfer','重點碼互傳')}${button('export-csv','匯出成績CSV','',state.history.length?'':'disabled')}${button('export-raw','匯出瀏覽器原始紀錄','small')}</div><div class="warning-box">請固定使用同一瀏覽器、同一檔案位置。清除網站資料、無痕模式、更換瀏覽器或移動/更名HTML，可能讓原紀錄無法讀取。這不是雲端同步工具。</div></section><h2>三種練習方式</h2><ul><li><strong>順序刷題：</strong>依原稿順序，可選章節及起始題。選答案後按「確認答案」，保留首次結果。</li><li><strong>隨機練習：</strong>從所選章節不重複抽題，確認後立即顯示對錯；範圍不足指定題數時，採該範圍全部題目。</li><li><strong>模擬抽考：</strong>全題庫隨機抽100題，每題1分，60分（含）及格；交卷後才顯示答案。無預設時限。</li><li><strong>錯題鞏固：</strong>收錄最近一次答錯、未答以及所有標記待查的題目，重複只計一次。錯題重新答對後移出；待查即使答對仍保留，須按「取消待查標記」才解除。待查跨次保存並包含在JSON備份；取消待查不會抹除錯題。既有成績不變。舊版未完成作答的待查會沿用；舊版已交卷且未保存的待查標記無法補回。</li></ul><h2>進度與評分</h2><ul><li>每次選答、確認及跳題立即本機保存；重新開啟可續答同一份試卷，不會重新抽題。</li><li>「保存並暫停」停止本次計時；回到作答頁後恢復。關閉/背景期間不計時，無倒數限制。</li><li>交卷前會提醒未答題；未答以0分計算。練習分數為答對題數÷本次總題數×100。</li><li>「A+B+C」或條款組合仍是單選題，因此不打亂選項位置。</li><li>已相容原113題版本的成績、錯題進度與未完成試卷，不改既有答案或分數；原試卷不會中途插入新題。未知版本或改過答案的備份仍拒絕。</li><li>匯入前會檢查題庫版本和成績。匯入會取代本機紀錄，確認前會先下載目前備份。更換HTML路徑時，先在舊版匯出，再在新版匯入。</li></ul><h2>題庫來源與限制</h2><p>來源：用戶提供的18張照片（9頁、113題）及《${e(BANK.wordDocument.filename)}》（實際104題）。重複75題合併並保留雙來源，新增29題，合計${QS.length}題；所有正解以原稿題前A–D字母為準。未使用外部題庫，也未自行變更可能過時的法規題。</p><p>題目保留原文簡體中文，介面使用繁體中文。跨頁文字已接續；題目中的原始重複選項、缺句等問題，以註記保留，不用推測補題。</p><p>題庫版本：<code>${e(BANK.version)}</code>。自我練習用途，並非官方考試或最新法規依據。</p><details style="margin-top:16px"><summary>查看原稿疑點與轉錄註記（${notes.length}題）</summary><ul>${notes.map(q=>`<li><strong>${e(sourceLabel(q))}・${e(q.section)}</strong><br>${e(q.note)} ${button('source','查看原稿','small',`data-id="${q.id}"`)}</li>`).join('')}</ul></details></div>`;
   }
   function render() {
     $('#app').innerHTML = route==='oral'?oralUI.view():route==='session'?session():route==='history'?history():route==='result'?result():route==='bank'?bank():route==='settings'?settings():home();
@@ -832,6 +918,60 @@
     const blob=new Blob([text],{type:type+';charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
   }
   function exportBackup() {tick();download('刷題備份-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({app:'seafarer-quiz',exportedAt:new Date().toISOString(),state},null,2));toast('已提出備份下載，請確認檔案已保存。');}
+  function showMarksTransfer() {
+    oralUI.stop();
+    if(saveBlocked||storageMessage){modal('目前紀錄不能互傳','<p>本視窗有讀取或多視窗保存警告，請先按原有備份功能保護紀錄並處理警告，再互傳重點。</p>',button('close-modal','知道了','primary'));return;}
+    const code=MARKS.encode(state);
+    let backup=null,backupNote='尚無替換前備份。';
+    try{backup=readMarksBackup();if(backup)backupNote='替換前備份：'+fmtDate(backup.createdAt)+'（只保留最近一次）';}
+    catch(err){backupNote='上次重點備份無法讀取：'+err.message;}
+    modal('重點碼互傳',`<div class="marks-transfer"><p>離線互傳，只包含單選待查與口語重點。<strong>不含成績、答案紀錄或音檔。</strong>重點碼未加密，拿到碼的人可以匯入。</p><label class="field">本機重點碼：單選待查 ${state.bookmarks.length} 題、口語重點 ${state.oral.favorites.length} 題<textarea id="marks-output" rows="3" readonly spellcheck="false" autocapitalize="off" aria-label="本機重點碼">${e(code)}</textarea></label><div class="actions">${button('marks-copy','複製我的重點碼','primary')}</div><p id="marks-message" role="status" aria-live="polite">將完整重點碼傳給另一台設備，再到那台的PWA貼上。</p><hr><label class="field">貼上另一台的完整重點碼<textarea id="marks-input" rows="3" maxlength="4096" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="貼上重點碼" placeholder="SQM1.…">${e(marksDraft)}</textarea></label><p id="marks-error" role="alert"></p><div class="actions">${button('marks-preview','預覽並取代本機重點','primary')}${button('marks-restore','還原上次本機重點','',backup?'':'disabled')}</div><small>${e(backupNote)} 備份只在此瀏覽器；清除網站資料會一起移除。</small></div>`,button('close-modal','關閉'));
+  }
+  async function copyMarksCode() {
+    const input=$('#marks-output'),message=$('#marks-message');if(!input)return;
+    const value=input.value;
+    try{
+      if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(value);
+      if(message.isConnected)message.textContent='已複製完整重點碼，可貼到訊息傳給另一台設備。';
+    }catch(err){
+      if(!input.isConnected)return;input.focus();input.select();input.setSelectionRange(0,value.length);
+      message.textContent='瀏覽器不允許自動複製；已選取完整重點碼，請按 Ctrl+C／⌘C，手機請長按選擇「複製」。';
+    }
+  }
+  function readMarksBackup() {
+    const raw=localStorage.getItem(MARKS_BACKUP_KEY);if(!raw)return null;
+    const backup=JSON.parse(raw);
+    if(backup?.schema!==1||typeof backup.createdAt!=='string'||!Number.isFinite(Date.parse(backup.createdAt)))throw new Error('重點備份格式不支援');
+    MARKS.decode(backup.code);return backup;
+  }
+  function previewMarks(code,restoring=false) {
+    try{
+      const marks=MARKS.decode(code);
+      const empty=!marks.choice.length&&!marks.oral.length;
+      confirmAction(restoring?'預覽重點還原':'預覽重點替換',`<p>只取代重點，<strong>不與本機標記合併</strong>：</p><ul><li>單選待查：${state.bookmarks.length} → <strong>${marks.choice.length}</strong> 題</li><li>口語重點：${state.oral.favorites.length} → <strong>${marks.oral.length}</strong> 題</li></ul>${empty?'<div class="warning-box">這是一份空重點清單，確認後會清除本機兩類重點標註。</div>':''}<p>成績、未完成答案、錯題紀錄與語音設定不變。原「只練重點」篩選繼續生效；目前題目若已移出重點，會改到符合篩選的題目。</p><p>先保存目前重點作為本機備份，再取代；若無法備份或保存，會停止並顯示警告。</p>`,()=>applyMarks(code),restoring?'備份並還原重點':'備份並取代本機重點');
+    }catch(err){$('#marks-error').textContent=err.message;}
+  }
+  function applyMarks(code) {
+    let next;
+    try{
+      if(saveBlocked||storageMessage)throw new Error('請先處理本視窗的保存警告；未開始替換');
+      if(localStorage.getItem(KEY)!==rawBaseline){saveBlocked=true;alertStorage('另一個視窗已更新紀錄，重點替換已停止。請先保護本視窗紀錄，再重新開啟。');throw new Error('另一個視窗已更新紀錄，未開始替換');}
+      next=MARKS.replace(state,code);
+      C.validateState(next,BY,BANK.version,BANK.compatibleBanks);
+      const currentCode=MARKS.encode(state);
+      if(MARKS.encode(next)===currentCode){toast('重點與本機相同，沒有變更，也沒有覆蓋上次備份。');return;}
+      const backup=JSON.stringify({schema:1,createdAt:new Date().toISOString(),code:currentCode});
+      localStorage.setItem(MARKS_BACKUP_KEY,backup);
+      if(localStorage.getItem(MARKS_BACKUP_KEY)!==backup)throw new Error('替換前重點備份讀回不一致');
+    }catch(err){modal('重點未替換','<p>'+e(err.message)+'。未寫入新的重點。</p>',button('marks-transfer','返回互傳')+button('close-modal','關閉'));return;}
+    const before=state;state=next;
+    if(!persist()){
+      state=before;saveBlocked=true;render();
+      modal('重點保存未確認',`<p>未能確認新重點已保存。本視窗保留替換前內容並停止繼續寫入，請保持視窗開啟、先匯出備份。</p><p>替換前重點備份已保留。${e(storageMessage)}</p>`,button('close-modal','知道了','primary'));return;
+    }
+    oralUI.enter();render();marksDraft='';toast('已取代並保存本機重點，成績與答案紀錄不變。可在「重點碼互傳」還原上次重點。');
+  }
   function csv() {
     const cell=v=>'"'+String(v).replace(/"/g,'""')+'"';
     const rows=[['完成時間','模式','題數','答對','答錯','未答','分數','結果','作答用時']];
@@ -871,6 +1011,10 @@
       case 'peek':peek(b.dataset.id);break;
       case 'source':showSource(b.dataset.id);break;
       case 'export':exportBackup();break;
+      case 'marks-transfer':showMarksTransfer();break;
+      case 'marks-copy':copyMarksCode();break;
+      case 'marks-preview':marksDraft=$('#marks-input').value;previewMarks(marksDraft);break;
+      case 'marks-restore':try{const backup=readMarksBackup();if(!backup)throw new Error('尚無替換前備份');previewMarks(backup.code,true);}catch(err){$('#marks-error').textContent=err.message;}break;
       case 'export-csv':csv();break;
       case 'export-raw':{try{const raw=localStorage.getItem(KEY);download('刷題原始紀錄.json',raw||'null');toast('已提出原始紀錄下載。');}catch(err){toast('無法讀取瀏覽器紀錄：'+err.message);}break;}
       case 'import':$('#import-file').click();break;
@@ -920,7 +1064,7 @@
 })();
 </script>
 <noscript>本機刷題需要瀏覽器啟用JavaScript。請用Chrome或Edge直接開啟此HTML。</noscript>
-<script id="pwa-config" type="application/json">{"release":"929005f79a63eebdb4a6"}</script>
+<script id="pwa-config" type="application/json">{"release":"d1ddc940de9edbe89bde"}</script>
 <script>/* PWA shell only. Does not read/write/clear the quiz's localStorage. */
 (() => {
   'use strict';
