@@ -1,4 +1,5 @@
-語音：Kokoro-82M-v1.0，bm_george 英式男聲；ONNX community q8；生成速度0.95。不是 Google 聲音或原錄音。
+語音：Kokoro-82M-v1.0；原口語／聽力 bm_george 英式男聲；BRM en-GB：bm_george；zh-CN：zm_yunxi_bm_george。ONNX community q8；生成速度0.95。
+BRM中文用普通話；其中英文片段與對外報告用英式男聲。不是 Google 聲音或原錄音；未經逐段人工校聽。
 模型：https://huggingface.co/hexgrad/Kokoro-82M （Apache-2.0）
 匯出：https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX
 生成引擎：https://github.com/thewh1teagle/kokoro-onnx （MIT）

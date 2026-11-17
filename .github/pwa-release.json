@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "release": "d1ddc940de9edbe89bde",
-  "files": 693,
-  "audioFiles": 682,
-  "assetsSha256": "67baf5ce30f216d71855ce96bcbaa23f6dcebb4c489b33212e0017337886fd2b",
-  "workerSha256": "0cb9975f3ae13acbb13aa68ebc054f98bff0dd20b8895a786684adae2f80de89"
+  "release": "3aa92f8d5cab576d8ccf",
+  "files": 1144,
+  "audioFiles": 1133,
+  "assetsSha256": "b47c51a2d64e28902c782a80efce7cc0b7af67dbd6b484215ed6ed21891d7307",
+  "workerSha256": "c8f18759aa3c09637cf021c1af69db39405ba919ca56a1aa6205934a06ad5243"
 }
